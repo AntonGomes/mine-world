@@ -1,7 +1,7 @@
 (define (problem mine-problem)
     (:domain mine-world)
     (:objects
-        A B C D E - ore
+        A B C - ore
         Hammer - hammer
         Bot1 - mineBot
         Bot2 - mineBot
@@ -14,7 +14,6 @@
         (ItemOn B t3)
         (ItemOn C t10)
 
-        (Blocked A)
         (Blocked B)
         (Blocked C)
 
