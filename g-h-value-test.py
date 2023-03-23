@@ -1,20 +1,21 @@
 import subprocess
 import time
 import matplotlib.pyplot as plt
+import numpy as np
 
-g_values = range(1, 11)
-h_values = range(1, 11)
+g_values = range(1, 51)
+h_values = range(1, 51)
 g_h_values = []
 
 for g in g_values:
     for h in h_values:
-        if g>=((3*h)/4):
+        if g>=((h)/2):
             continue
         g_h_values.append((str(g), str(h))) 
             
 start_time = time.time()
 i=1
-
+test_values = []
 for g, h in g_h_values:
     print("Test", i, "of", len(g_h_values))
     print("Elapsed time:", time.time() - start_time)
@@ -26,29 +27,27 @@ for g, h in g_h_values:
         ref = outputs.index(reference_line[0])
         total_time= outputs[ref+6][14:19]
         steps_taken= outputs[ref-3][6:9]
-        print(f"{steps_taken} step path found in {total_time} seconds")
-        test_values = [g,h,steps_taken,total_time]
+        print(f"{steps_taken} step path found in {total_time} seconds \n")
+        test_values.append([g,h,steps_taken,total_time])
     else:
-        test_values = [g,h,"-","-"]
+        test_values = [g,h,0,0]
 
-gs = [x[0] for x in test_values]
-hs = [x[1] for x in test_values]
-steps = [x[2] for x in test_values]
-times = [x[3] for x in test_values]
-
+ghratio = [((float(x[0]))/(float(x[1]))) for x in test_values]
+steps = [float(x[2]) for x in test_values]
+times = [float(x[3]) for x in test_values]
+print(ghratio)
 # plot the graph for steps_taken vs. g and h
 fig, ax = plt.subplots()
-ax.scatter(gs, hs, c=steps)
-ax.set_xlabel('g')
-ax.set_ylabel('h')
-ax.set_title('Steps taken')
-plt.show()
+ax.scatter(ghratio, steps)
+ax.set_xlabel('g/h')
+ax.set_ylabel('Steps taken')
+plt.savefig('steps_taken.png')
 
 # plot the graph for total_time vs. g and h
 fig, ax = plt.subplots()
-ax.scatter(gs, hs, c=times)
-ax.set_xlabel('g')
-ax.set_ylabel('h')
-ax.set_title('Total time')
-plt.show()
-    
+ax.scatter(ghratio,times)
+ax.set_xlabel('g/h')
+ax.set_ylabel('Times')
+plt.savefig('times.png')
+
+   
