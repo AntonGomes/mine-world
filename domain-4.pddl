@@ -16,6 +16,7 @@
         (LiftActive ?l - lift)
         (Mined ?o - ore)
         (OnFire ?t - tile)
+        (Heavy ?o - item)
     )
 
     (:functions
@@ -39,13 +40,14 @@
     )
 
     (:action MOVE-WHILE-HOLDING
-        :parameters (?s ?t - tile ?m - mineBot)
+        :parameters (?s ?t - tile ?m - mineBot ?i - item)
         :precondition (and
             (On ?m ?s)
             (Linked ?s ?t)
             (> (energy ?m) 2)
-            (FullInv ?m)
+            (Holding ?m ?i)
             (not (OnFire ?t))
+            (not (Heavy ?i))
         )
         :effect (and 
             (not (On ?m ?s))
@@ -54,11 +56,34 @@
         )
     )
 
+    (:action CARRY-TOGETHER
+        :parameters (?s ?t - tile ?m ?n - mineBot ?i - item)
+        :precondition (and
+            (On ?m ?s)
+            (On ?n ?s)
+            (Linked ?s ?t)
+            (> (energy ?m) 2)
+            (> (energy ?n) 2)
+            (Holding ?m ?i)
+            (Holding ?n ?i)
+            (Heavy ?i)
+        )
+        :effect (and 
+            (not (On ?m ?s))
+            (not (On ?n ?s))
+            (On ?m ?t)
+            (On ?n ?t)
+            (decrease (energy ?m) 3)
+            (decrease (energy ?n) 3)
+        )
+    )
+
     (:action PICKUP
         :parameters (?i - item ?t - tile ?m - mineBot)
         :precondition (and
             (not (FullInv ?m)) 
             (not (Blocked ?i)) 
+            (not (Heavy ?i))
             (On ?m ?t) 
             (ItemOn ?i ?t)
             )
@@ -68,6 +93,25 @@
             (FullInv ?m)
         )
     )
+
+    (:action PICKUP-TOGETHER
+        :parameters (?o - ore ?t - tile ?m ?n - mineBot)
+        :precondition (and
+            (not (FullInv ?m))
+            (not (FullInv ?n))
+            (not (Blocked ?o))
+            (Heavy ?o)
+            (On ?m ?t)
+            (On ?n ?t)
+            (ItemOn ?o ?t)
+            )
+        :effect (and
+            (not (ItemOn ?o ?t))
+            (Holding ?m ?o)
+            (Holding ?n ?o)
+            (FullInv ?m)
+            (FullInv ?n)
+        )
 
     (:action DROP
         :parameters (?i - item ?t - tile ?m - mineBot)
@@ -82,7 +126,6 @@
         )
     )
     
-
     (:action BREAK
         :parameters (?o - ore ?t - tile ?h - hammer ?m - mineBot)
         :precondition (and
