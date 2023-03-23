@@ -1,9 +1,9 @@
 (define (problem mine-problem)
     (:domain mine-world)
     (:objects
-        A B C - ore
+        A B C D - ore
         Hammer - hammer
-        Bot - mineBot
+        Bot1 Bot2 - mineBot
         Lift - lift
         Energy-Station - estation
         Fstopper - fstopper
@@ -14,13 +14,20 @@
         (ItemOn A t1)
         (ItemOn B t3)
         (ItemOn C t10)
+        (ItemOn D t13)
         
         (Blocked B)
         (Blocked C)
+        (Blocked D)
 
-        (On Bot t17)
+        (Heavy D)
 
-        (= (energy Bot) 40)
+        (On Bot1 t17)
+        (On Bot2 t4)
+        (Different Bot1 Bot2)
+
+        (= (energy Bot1) 40)
+        (= (energy Bot2) 40)
 
         (ItemOn Hammer t8)
         (ItemOn Fstopper t14)
@@ -59,5 +66,6 @@
         (Mined A)
         (Mined B)
         (Mined C)
+        (Mined D)
     ))
 )

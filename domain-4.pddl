@@ -17,6 +17,7 @@
         (Mined ?o - ore)
         (OnFire ?t - tile)
         (Heavy ?o - item)
+        (Different ?x ?y - object)
     )
 
     (:functions
@@ -59,6 +60,7 @@
     (:action CARRY-TOGETHER
         :parameters (?s ?t - tile ?m ?n - mineBot ?i - item)
         :precondition (and
+            (Different ?m ?n)
             (On ?m ?s)
             (On ?n ?s)
             (Linked ?s ?t)
@@ -97,6 +99,7 @@
     (:action PICKUP-TOGETHER
         :parameters (?o - ore ?t - tile ?m ?n - mineBot)
         :precondition (and
+            (Different ?m ?n)
             (not (FullInv ?m))
             (not (FullInv ?n))
             (not (Blocked ?o))
@@ -112,6 +115,7 @@
             (FullInv ?m)
             (FullInv ?n)
         )
+    )
 
     (:action DROP
         :parameters (?i - item ?t - tile ?m - mineBot)
