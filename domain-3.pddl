@@ -2,8 +2,8 @@
     (:requirements :adl)
 
     (:types 
-        tile mineBot lift item - object
-        hammer ore - item 
+        tile mineBot lift item estation - object
+        hammer ore fstopper - item 
     )
 
     (:predicates
@@ -15,6 +15,11 @@
         (ItemOn ?i - item ?t - tile)
         (LiftActive ?l - lift)
         (Mined ?o - ore)
+        (OnFire ?t - tile)
+    )
+
+    (:functions
+    (energy ?r - mineBot)
     )
 
     (:action MOVE
@@ -22,10 +27,30 @@
         :precondition (and
             (On ?m ?s) 
             (Linked ?s ?t)
+            (> (energy ?m) 0)
+            (not (FullInv ?m))
+            (not (OnFire ?t))
         )
         :effect (and
             (not (On ?m ?s))
             (On ?m ?t) 
+            (decrease (energy ?m) 1)
+        )
+    )
+
+    (:action MOVE-WHILE-HOLDING
+        :parameters (?s ?t - tile ?m - mineBot)
+        :precondition (and
+            (On ?m ?s)
+            (Linked ?s ?t)
+            (> (energy ?m) 2)
+            (FullInv ?m)
+            (not (OnFire ?t))
+        )
+        :effect (and 
+            (not (On ?m ?s))
+            (On ?m ?t)
+            (decrease (energy ?m) 3)
         )
     )
 
@@ -36,7 +61,7 @@
             (not (Blocked ?i)) 
             (On ?m ?t) 
             (ItemOn ?i ?t)
-            )
+        )
         :effect (and
             (not (ItemOn ?i ?t)) 
             (Holding ?m ?i)
@@ -57,43 +82,16 @@
         )
     )
     
-
-    (:action BREAK
-        :parameters (?o - ore ?t - tile ?h - hammer ?m - mineBot)
-        :precondition (and
-            (Holding ?m ?h)
-            (Blocked ?o)
-            (On ?m ?t)
-            (ItemOn ?o ?t)
+    (:action STOP-FIRE
+        :parameters (?s ?t - tile ?m - mineBot ?x - fstopper)
+        :precondition (and 
+            (On ?m ?s)
+            (OnFire ?t)
+            (Linked ?s ?t)
+            (Holding ?m ?x)
         )
         :effect (and
-            (not (Blocked ?o))
-        )
-    )
-
-    (:action ACTIVATE_LIFT
-        :parameters (?t - tile ?l - lift ?m - mineBot)
-        :precondition (and
-            (not (LiftActive ?l))
-            (On ?m ?t)
-            (On ?l ?t)
-            )
-        :effect (LiftActive ?l)
-    )
-    
-    (:action MINE
-        :parameters (?t - tile ?o - ore ?m - mineBot ?l - lift)
-        :precondition (and
-            (Holding ?m ?o)
-            (LiftActive ?l)
-            (On ?m ?t)
-            (On ?l ?t)
-            (not (Mined ?o))
-        )
-        :effect (and 
-            (not(Holding ?m ?o))
-            (Mined ?o)
-            (not (FullInv ?m))
+            (not (OnFire ?t))
         )
     )
 )

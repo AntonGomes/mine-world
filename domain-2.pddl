@@ -2,7 +2,7 @@
     (:requirements :adl)
 
     (:types 
-        tile mineBot lift item - object
+        tile mineBot lift item estation - object
         hammer ore - item 
     )
 
@@ -17,15 +17,37 @@
         (Mined ?o - ore)
     )
 
+    (:functions
+    (energy ?r - mineBot)
+    )
+
     (:action MOVE
         :parameters (?s ?t - tile ?m - mineBot)
         :precondition (and
             (On ?m ?s) 
             (Linked ?s ?t)
+            (> (energy ?m) 0)
+            (not (FullInv ?m))
         )
         :effect (and
             (not (On ?m ?s))
             (On ?m ?t) 
+            (decrease (energy ?m) 1)
+        )
+    )
+
+    (:action MOVE-WHILE-HOLDING
+        :parameters (?s ?t - tile ?m - mineBot)
+        :precondition (and
+            (On ?m ?s)
+            (Linked ?s ?t)
+            (> (energy ?m) 2)
+            (FullInv ?m)
+            )
+        :effect (and 
+            (not (On ?m ?s))
+            (On ?m ?t)
+            (decrease (energy ?m) 3)
         )
     )
 
@@ -95,5 +117,14 @@
             (Mined ?o)
             (not (FullInv ?m))
         )
+    )
+
+    (:action RECHARGE
+        :parameters (?t - tile ?e - estation ?m - minebot)
+        :precondition (and
+            (On ?m ?t)
+            (On ?e ?t)
+            )
+        :effect (assign (energy ?m) 40)
     )
 )
