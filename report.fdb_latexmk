@@ -1,0 +1,13 @@
+# Fdb version 4
+["pdflatex"] 1679660690 "/home/anton/Development/mine-world/report.tex" "report.pdf" "report" 1679660690 2
+  "/home/anton/.texlive2021/texmf-var/web2c/pdftex/pdflatex.fmt" 1677786100 1345260 0a70e39048de50bdce050e9510b4e5cb ""
+  "/home/anton/Development/mine-world/report.tex" 1679589298 901 3f6bd5b782f3100e74a9d1589089c752 ""
+  "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1661385786 40136 b05acc85e8425979e52682d98a2bcacf ""
+  "exam.cls" 0 -1 0 ""
+  "report.aux" 1679660690 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "report.tex" 1679589298 901 3f6bd5b782f3100e74a9d1589089c752 ""
+  (generated)
+  "report.aux"
+  "report.log"
+  "report.pdf"
+  (rewritten before read)

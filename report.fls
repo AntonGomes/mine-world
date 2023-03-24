@@ -1,0 +1,6 @@
+PWD /home/anton/Development/mine-world
+INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
+INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
+INPUT /home/anton/.texlive2021/texmf-var/web2c/pdftex/pdflatex.fmt
+INPUT /home/anton/Development/mine-world/report.tex
+OUTPUT report.log
