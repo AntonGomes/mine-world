@@ -137,6 +137,7 @@
             (On ?m ?s)
             (Holding ?m ?f)
             (OnFire ?t)
+            (Linked ?s ?t)
         )
         :effect (and 
             (not (OnFire ?t))
