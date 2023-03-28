@@ -2,8 +2,8 @@
     (:requirements :adl)
 
     (:types 
-        tile mineBot lift item estation - object
-        hammer ore fstopper - item 
+        tile mineBot item - object
+        hammer ore fstopper - item
     )
 
     (:predicates
@@ -13,9 +13,11 @@
         (FullInv ?m - mineBot)
         (On ?b - object ?t - tile)
         (ItemOn ?i - item ?t - tile)
-        (LiftActive ?l - lift)
+        (LiftActive ?l - tile)
         (Mined ?o - ore)
         (OnFire ?t - tile)
+        (IsLift ?l - tile)
+        (IsEstation ?e - tile)
         (Heavy ?o - item)
         (Different ?x ?y - object)
     )
@@ -59,16 +61,17 @@
     )
 
     (:action CARRY-TOGETHER
-        :parameters (?s ?t - tile ?m ?n - mineBot ?i - item)
+        :parameters (?s ?t - tile ?m ?n - mineBot ?i - ore)
         :precondition (and
             (Different ?m ?n)
             (On ?m ?s)
             (On ?n ?s)
+            (not (OnFire ?t))
             (Linked ?s ?t)
             (> (energy ?m) 2)
             (> (energy ?n) 2)
-            (Holding ?m ?i)
-            (Holding ?n ?i)
+            (FullInv ?m)
+            (FullInv ?n)
             (Heavy ?i)
         )
         :effect (and 
@@ -98,21 +101,21 @@
     )
 
     (:action PICKUP-TOGETHER
-        :parameters (?o - ore ?t - tile ?m ?n - mineBot)
+        :parameters (?i - item ?t - tile ?m ?n - mineBot)
         :precondition (and
             (Different ?m ?n)
             (not (FullInv ?m))
             (not (FullInv ?n))
-            (not (Blocked ?o))
-            (Heavy ?o)
+            (not (Blocked ?i))
+            (Heavy ?i)
             (On ?m ?t)
             (On ?n ?t)
-            (ItemOn ?o ?t)
+            (ItemOn ?i ?t)
             )
         :effect (and
-            (not (ItemOn ?o ?t))
-            (Holding ?m ?o)
-            (Holding ?n ?o)
+            (not (ItemOn ?i ?t))
+            (Holding ?m ?i)
+            (Holding ?n ?i)
             (FullInv ?m)
             (FullInv ?n)
         )
@@ -130,13 +133,13 @@
             (not (FullInv ?m))
         )
     )
-    
+   
     (:action BREAK
-        :parameters (?o - ore ?t - tile ?h - hammer ?m - mineBot)
+        :parameters (?o - ore ?h - hammer ?t - tile ?m - mineBot)
         :precondition (and
             (Holding ?m ?h)
-            (> (durability ?h) 0)
             (Blocked ?o)
+            (> (durability ?h) 0)
             (On ?m ?t)
             (ItemOn ?o ?t)
         )
@@ -147,22 +150,22 @@
     )
 
     (:action ACTIVATE_LIFT
-        :parameters (?t - tile ?l - lift ?m - mineBot)
+        :parameters (?t - tile ?m - mineBot)
         :precondition (and
-            (not (LiftActive ?l))
+            (not (LiftActive ?t))
+            (IsLift ?t)
             (On ?m ?t)
-            (On ?l ?t)
             )
-        :effect (LiftActive ?l)
+        :effect (LiftActive ?t)
     )
     
     (:action MINE
-        :parameters (?t - tile ?o - ore ?m - mineBot ?l - lift)
+        :parameters (?t - tile ?o - ore ?m - mineBot)
         :precondition (and
             (Holding ?m ?o)
-            (LiftActive ?l)
+            (LiftActive ?t)
+            (IsLift ?t)
             (On ?m ?t)
-            (On ?l ?t)
             (not (Mined ?o))
         )
         :effect (and 
@@ -173,19 +176,19 @@
     )
 
     (:action RECHARGE
-        :parameters (?t - tile ?e - estation ?m - minebot)
+        :parameters (?t - tile ?m - minebot)
         :precondition (and
             (On ?m ?t)
-            (On ?e ?t)
+            (IsEstation ?t)
             )
         :effect (assign (energy ?m) 40)
     )
-
+     
     (:action REPAIR
-        :parameters (?t - tile ?e - estation ?h - hammer ?m - minebot)
+        :parameters (?t - tile ?h - hammer ?m - minebot)
         :precondition (and
             (On ?m ?t)
-            (On ?e ?t)
+            (IsEstation ?t)
             (Holding ?m ?h)
             )
         :effect (assign (durability ?h) 2)

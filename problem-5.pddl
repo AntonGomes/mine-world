@@ -3,10 +3,8 @@
     (:objects
         A B C D - ore
         Hammer - hammer
-        Bot1 Bot2 - mineBot
-        Lift - lift
-        Energy-Station - estation
         Fstopper - fstopper
+        Bot1 Bot2 - mineBot
         t1 t2 t3 t4 t5 t6 t7 t8 t9 t10 t11 t12 t13 t14 t15 t16 t17 t18 t19 t20 t21 t22 t23 - tile
     )
 
@@ -25,17 +23,19 @@
         (On Bot1 t17)
         (On Bot2 t4)
         (Different Bot1 Bot2)
+        (Different Bot2 Bot1)
 
         (= (energy Bot1) 40)
         (= (energy Bot2) 40)
 
         (ItemOn Hammer t8)
         (= (durability Hammer) 2)
+        
         (ItemOn Fstopper t14)
 
-        (On Lift t23)
+        (IsLift t23)
         (OnFire t7)
-        (On Energy-Station t12)
+        (IsEstation t12)
 
         (Linked t1 t5) (Linked t5 t1)
         (Linked t5 t4) (Linked t4 t5)

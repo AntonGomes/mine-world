@@ -133,24 +133,6 @@
         )
     )
     
-    (:action BOTH-DROP
-        :parameters (?i - item ?t - tile ?m ?n - mineBot)
-        :precondition (and 
-            (Different ?m ?n)
-            (Holding ?m ?i)
-            (Holding ?n ?i)
-            (On ?m ?t)
-            (On ?n ?t)
-        )
-        :effect (and
-            (not (Holding ?m ?i))
-            (not (Holding ?n ?i))
-            (ItemOn ?i ?t)
-            (not (FullInv ?m))
-            (not (FullInv ?n))
-        )
-    )
-    
     (:action BREAK
         :parameters (?o - ore ?h - hammer ?t - tile ?m - mineBot)
         :precondition (and
